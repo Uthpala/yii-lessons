@@ -39,14 +39,13 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            ['label' => 'Help', 'url' => ['/site/help']],
-            ['label' => 'Posts', 'url' => ['/site/person']],
-            ['label' => 'Cal', 'url' => ['/site/uthpala']],
+            
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (
+                '<li>'
+                . '<a href="threads/index">Threads</a>'.
+                '</li>'.
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
