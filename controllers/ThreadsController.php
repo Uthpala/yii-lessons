@@ -65,7 +65,9 @@ class ThreadsController extends Controller
     {
         $model = new Threads();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->user_id = Yii::$app->user->identity->id;
+            $model->save();
             return $this->redirect(['index']);
         } else {
             return $this->render('create', [
@@ -83,14 +85,19 @@ class ThreadsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        if( Yii::$app->user->identity->id === $model->user_id ){
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
+        }else{
+            Yii::$app->session->setFlash('error', "You are not allowed to do this");
+            return $this->redirect(['index']);
         }
+        
     }
 
     /**
@@ -100,10 +107,14 @@ class ThreadsController extends Controller
      * @return mixed
      */
     public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+    {   
+        $model = $this->findModel($id);
+        if( Yii::$app->user->identity->id === $model->user_id ){
+            $model->delete();
+            return $this->redirect(['index']);
+        }else{
+            die('You are not allowed to delete this');
+        }
     }
 
     /**
