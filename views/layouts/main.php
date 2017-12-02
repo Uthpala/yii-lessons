@@ -41,12 +41,12 @@ AppAsset::register($this);
             ['label' => 'Home', 'url' => ['/site/index']],
             Yii::$app->user->isGuest ?
             ['label' => 'Sign in', 'url' => ['/user/security/login']] :
-            ['label' => 'Threads',
-            'url' => ['/thread/index']],
+            ['label' => 'Threads', 'url' => ['/threads/index']],
+            !Yii::$app->user->isGuest ?
             ['label' => 'Sign out (' . Yii::$app->user->identity->username . ')',
                 'url' => ['/user/security/logout'],
-                'linkOptions' => ['data-method' => 'post']],
-            ['label' => 'Register', 'url' => ['/user/registration/register'], 'visible' => Yii::$app->user->isGuest]
+                'linkOptions' => ['data-method' => 'post'],
+            ] : ['label' => 'Register', 'url' => ['/user/registration/register']],
         ],
     ]);
     NavBar::end();
