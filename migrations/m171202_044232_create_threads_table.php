@@ -14,6 +14,8 @@ class m171202_044232_create_threads_table extends Migration
     {
         $this->createTable('threads', [
             'id' => $this->primaryKey(),
+            'title' => $this->string(),
+            'body' => $this->text(),
         ]);
     }
 
