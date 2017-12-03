@@ -16,3 +16,12 @@ Show the posts link to authenticated users only
 
 Read about database seeding 
 
+Do ajax submit for comments and likes and replies
+
+Read about Yii2 user RBAC 
+
+Try to implement in your project
+
+
+
+
