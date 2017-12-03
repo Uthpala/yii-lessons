@@ -14,16 +14,20 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+    <?php 
+        if ($model->belongsToLoggedInUser()) { ?>
+        <p>
+            <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => 'Are you sure you want to delete this item?',
+                    'method' => 'post',
+                ],
+            ]) ?>
+        </p>
+    <?php  } ?> 
+    
 
     <?= DetailView::widget([
         'model' => $model,
@@ -33,5 +37,22 @@ $this->params['breadcrumbs'][] = $this->title;
             'body:ntext',
         ],
     ]) ?>
-
+    <ul id="comments-list">
+    <?php 
+    $commentArray = $model->comments;
+    foreach( $commentArray as $comment ){
+        echo "<li>".$comment->body."</li>";
+    }
+    ?>
+    </ul>
+    <?= $this->render('/comments/create',[
+            'model'=>$comments, 
+        ]);
+    ?>
+    <?php 
+    $images = $model->images;
+    foreach( $images as $image ){
+        echo "<img src='".$image->image_path."' />";
+    }
+    ?>
 </div>

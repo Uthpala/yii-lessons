@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Threads;
+use app\models\Comments;
 
 /**
- * ThreadsSearch represents the model behind the search form about `app\models\Threads`.
+ * CommentsSearch represents the model behind the search form about `app\models\Comments`.
  */
-class ThreadsSearch extends Threads
+class CommentsSearch extends Comments
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class ThreadsSearch extends Threads
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['title', 'body'], 'safe'],
+            [['id', 'thread_id'], 'integer'],
+            [['body'], 'safe'],
         ];
     }
 
@@ -39,9 +39,9 @@ class ThreadsSearch extends Threads
      *
      * @return ActiveDataProvider
      */
-    public function search($params) 
+    public function search($params)
     {
-        $query = Threads::find();
+        $query = Comments::find();
 
         // add conditions that should always apply here
 
@@ -60,10 +60,10 @@ class ThreadsSearch extends Threads
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'thread_id' => $this->thread_id,
         ]);
 
-        $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'body', $this->body]);
+        $query->andFilterWhere(['like', 'body', $this->body]);
 
         return $dataProvider;
     }

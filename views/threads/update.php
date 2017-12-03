@@ -18,4 +18,11 @@ $this->params['breadcrumbs'][] = 'Update';
         'model' => $model,
     ]) ?>
 
+    <?php 
+        $images = $model->images;
+        foreach( $images as $image ){
+            echo "<img src='".$image->image_path."' />";
+        }
+    ?>
+
 </div>

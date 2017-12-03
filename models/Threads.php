@@ -4,6 +4,8 @@ namespace app\models;
 
 use Yii;
 
+use app\models\ThreadImages;
+use app\models\Comments;
 /**
  * This is the model class for table "threads".
  *
@@ -13,6 +15,8 @@ use Yii;
  */
 class Threads extends \yii\db\ActiveRecord
 {
+    public $threadImages;
+    public $comment;
     /**
      * @inheritdoc
      */
@@ -27,10 +31,21 @@ class Threads extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            ['title','required'],
+            [['title','body'],'required'],
             [['body'], 'string'],
+            [['threadImages'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg', 'maxFiles' => 4],
             [['title'], 'string', 'max' => 255],
         ];
+    }
+
+    public function getImages()
+    {
+        return $this->hasMany(ThreadImages::className(), ['thread_id' => 'id']);
+    }
+
+    public function getComments()
+    {
+        return $this->hasMany(Comments::className(), ['thread_id' => 'id']);
     }
 
     /**
@@ -43,5 +58,30 @@ class Threads extends \yii\db\ActiveRecord
             'title' => 'Title',
             'body' => 'Body',
         ];
+    }
+
+    public function upload()
+    {
+        if ($this->validate()) { 
+            foreach ($this->threadImages as $file) {
+                $imagePath = 'uploads/' . uniqid() . '.' . $file->extension;
+                $file->saveAs($imagePath);
+                // save this to the thread images tables 
+                $threadImageModel = new ThreadImages();
+                $threadImageModel->thread_id = $this->id;
+                $threadImageModel->image_path = $imagePath;
+                $threadImageModel->save();
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function belongsToLoggedInUser(){
+        if( $this->user_id === Yii::$app->user->identity->id ){
+            return true;
+        }
+        return false;
     }
 }

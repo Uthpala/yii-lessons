@@ -3,18 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Threads;
 use app\models\Comments;
-use app\models\ThreadsSearch;
+use app\models\CommentsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\web\UploadedFile;
 
 /**
- * ThreadsController implements the CRUD actions for Threads model.
+ * CommentsController implements the CRUD actions for Comments model.
  */
-class ThreadsController extends Controller
+class CommentsController extends Controller
 {
     /**
      * @inheritdoc
@@ -25,19 +23,19 @@ class ThreadsController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['GET'],
+                    'delete' => ['POST'],
                 ],
             ],
         ];
     }
 
     /**
-     * Lists all Threads models.
+     * Lists all Comments models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ThreadsSearch();
+        $searchModel = new CommentsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -47,37 +45,29 @@ class ThreadsController extends Controller
     }
 
     /**
-     * Displays a single Threads model.
+     * Displays a single Comments model.
      * @param integer $id
      * @return mixed
      */
     public function actionView($id)
     {
-        $comments = new Comments();
-        $comments->thread_id = $id;
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'comments' => $comments
         ]);
     }
 
     /**
-     * Creates a new Threads model.
+     * Creates a new Comments model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Threads();
+        $model = new Comments();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->user_id = Yii::$app->user->identity->id;
-            $model->threadImages = UploadedFile::getInstances($model, 'threadImages');
-            $model->save();
-
-            $model->upload();
-
-            return $this->redirect(['index']);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            return $model;
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -86,7 +76,7 @@ class ThreadsController extends Controller
     }
 
     /**
-     * Updates an existing Threads model.
+     * Updates an existing Comments model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -94,48 +84,39 @@ class ThreadsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if( Yii::$app->user->identity->id === $model->user_id ){
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->render('update', [
-                    'model' => $model,
-                ]);
-            }
-        }else{
-            Yii::$app->session->setFlash('error', "You are not allowed to do this");
-            return $this->redirect(['index']);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
         }
-        
     }
 
     /**
-     * Deletes an existing Threads model.
+     * Deletes an existing Comments model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      */
     public function actionDelete($id)
-    {   
-        $model = $this->findModel($id);
-        if( Yii::$app->user->identity->id === $model->user_id ){
-            $model->delete();
-            return $this->redirect(['index']);
-        }else{
-            die('You are not allowed to delete this');
-        }
+    {
+        $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
     }
 
     /**
-     * Finds the Threads model based on its primary key value.
+     * Finds the Comments model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Threads the loaded model
+     * @return Comments the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Threads::findOne($id)) !== null) {
+        if (($model = Comments::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
