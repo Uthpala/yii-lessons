@@ -19,6 +19,11 @@ class CommenterRule extends Rule
      */
     public function execute($user, $item, $params)
     {
-        return isset($params['comment']) ? $params['comment']->user_id == $user : false;
+        if(isset($params['comment']) 
+            && $params['comment']->user_id == $user || 
+            $params['comment']->thread->user_id == $user ){
+            return true;
+        }
+        return false;
     }
 }
