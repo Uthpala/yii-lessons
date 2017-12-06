@@ -63,16 +63,28 @@ class CommentsController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Comments();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if( \Yii::$app->user->can('createComment') ){
+            $model = new Comments();
+            if ($model->load(Yii::$app->request->post()) ) {
+                $model->user_id = Yii::$app->user->identity->id;
+                $model->save();
+                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                return $model;
+                
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
+        }else{
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-            return $model;
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            $response = [
+                'error' => true,
+                'message' => 'you are not authorized to do this'
+            ];
+            return $response;
         }
+        
     }
 
     /**
@@ -84,13 +96,16 @@ class CommentsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        if (\Yii::$app->user->can('updateComment', ['comment' => $model])) {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
+        }else{
+            die('you are not allowed to do this');
         }
     }
 

@@ -45,6 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
     }
     ?>
     </ul>
+    <h1 id="comment-error"></h1>
     <?= $this->render('/comments/create',[
             'model'=>$comments, 
         ]);

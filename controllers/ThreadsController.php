@@ -68,21 +68,23 @@ class ThreadsController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Threads();
-
-        if ($model->load(Yii::$app->request->post())) {
-            $model->user_id = Yii::$app->user->identity->id;
-            $model->threadImages = UploadedFile::getInstances($model, 'threadImages');
-            $model->save();
-
-            $model->upload();
-
-            return $this->redirect(['index']);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        if( Yii::$app->user->can('createThread') ){
+            $model = new Threads();
+            if ($model->load(Yii::$app->request->post())) {
+                $model->user_id = Yii::$app->user->identity->id;
+                $model->threadImages = UploadedFile::getInstances($model, 'threadImages');
+                $model->save();
+                $model->upload();
+                return $this->redirect(['index']);
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
+        }else{
+            die('you cant do this');
         }
+        
     }
 
     /**
@@ -94,7 +96,7 @@ class ThreadsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if( Yii::$app->user->identity->id === $model->user_id ){
+        if (\Yii::$app->user->can('updateThread', ['thread' => $model])) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             } else {
@@ -102,11 +104,9 @@ class ThreadsController extends Controller
                     'model' => $model,
                 ]);
             }
-        }else{
-            Yii::$app->session->setFlash('error', "You are not allowed to do this");
-            return $this->redirect(['index']);
         }
         
+        die('you are not allowed to update this thread');
     }
 
     /**
