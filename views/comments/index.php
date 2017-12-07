@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\CommentsSearch */
@@ -13,21 +13,30 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="comments-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Create Comments', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'body:ntext',
-            'thread_id',
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
+            ['class'=>'kartik\grid\SerialColumn'],
+            [
+                'attribute'=>'thread_id', 
+                'width'=>'310px',
+                'value'=>function ($model, $key, $index, $widget) { 
+                    return $model->thread->title;
+                },
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'group'=>true,  
+            ],
+            [
+                'attribute'=>'body', 
+                'width'=>'250px',
+                'value'=>function ($model, $key, $index, $widget) { 
+                    return $model->body;
+                },
+            ]
+        ]
     ]); ?>
 </div>

@@ -105,7 +105,7 @@ class CommentsController extends Controller
                 ]);
             }
         }else{
-            die('you are not allowed to do this');
+            die('you are not allowed to do this˝');
         }
     }
 

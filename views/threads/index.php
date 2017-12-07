@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\grid\DataColumn;
 
 /* @var $this yii\web\View */
@@ -23,19 +23,29 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            'id',
-            'title',
-            'body:ntext',
-            'user_id',
+            ['class'=>'kartik\grid\SerialColumn'],
             [
-                'class' => DataColumn::className(), 
-                'attribute' => 'comment',
-                'format' => 'html',
-                'label' => 'Comment',
+                'attribute'=>'id', 
+                'width'=>'310px',
+                'value'=>function ($model, $key, $index, $widget) { 
+                    return $model->title;
+                },
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'group'=>true,  // enable grouping
             ],
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
+            [
+                'class' => '\kartik\grid\DataColumn', 
+                'attribute'=>'comment_id', 
+                'width'=>'250px',
+                'value'=>function ($model, $key, $index, $widget) { 
+                    return $model->comments->id;
+                },
+                'group'=>true,  // enable grouping
+                'subGroupOf'=>1 // supplier column index is the parent group
+            ],
+            'user_id'
+        ]
     ]); ?>
 </div>

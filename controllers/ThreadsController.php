@@ -19,16 +19,29 @@ class ThreadsController extends Controller
     /**
      * @inheritdoc
      */
+     public $enableCsrfValidation = false;
+
+     public static function allowedDomains() {
+         return [
+             '*',
+             'http://localhost:3000'
+         ];
+     }
+
     public function behaviors()
     {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['GET'],
-                ],
-            ],
-        ];
+      return array_merge(parent::behaviors(), [
+          'corsFilter'  => [
+              'class' => \yii\filters\Cors::className(),
+              'cors'  => [
+                  'Origin'                           => static::allowedDomains(),
+                  'Access-Control-Request-Method'    => ['POST'],
+                  'Access-Control-Allow-Credentials' => true,
+                  'Access-Control-Max-Age'           => 3600,                 // Cache (seconds)
+              ],
+          ],
+
+      ]);
     }
 
     /**
@@ -55,6 +68,8 @@ class ThreadsController extends Controller
     {
         $comments = new Comments();
         $comments->thread_id = $id;
+
+
         return $this->render('view', [
             'model' => $this->findModel($id),
             'comments' => $comments
@@ -84,7 +99,7 @@ class ThreadsController extends Controller
         }else{
             die('you cant do this');
         }
-        
+
     }
 
     /**
@@ -105,7 +120,7 @@ class ThreadsController extends Controller
                 ]);
             }
         }
-        
+
         die('you are not allowed to update this thread');
     }
 
@@ -116,7 +131,7 @@ class ThreadsController extends Controller
      * @return mixed
      */
     public function actionDelete($id)
-    {   
+    {
         $model = $this->findModel($id);
         if( Yii::$app->user->identity->id === $model->user_id ){
             $model->delete();
