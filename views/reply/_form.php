@@ -8,9 +8,13 @@ use kartik\depdrop\Depdrop;
 
 <div class="reply-form">
     <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'thread_id')
-        ->dropDownList(ArrayHelper::map($threads,'id','title'), ['id'=>'thread-id', 'prompt' => 'Select Thread']) ?>
+    <?= $form->field($model, 'thread_id')->dropDownList(
+            ArrayHelper::map($threads,'id','title'), 
+            [
+                'id'=>'thread-id', 
+                'prompt' => 'Select Thread'
+            ]
+        ) ?>
 
     <?= $form->field($model, 'comment_id')->widget(DepDrop::classname(), [
             'options'=>['id'=>'comment-id'],

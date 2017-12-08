@@ -14,6 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'showPageSummary'=>true,
         'columns' => [
             ['class'=>'kartik\grid\SerialColumn'],
             [
@@ -32,7 +33,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'group'=>true,  
             ],
-            'reply'
+            [
+                'attribute'=>'reply',
+                'width'=>'150px',
+                'hAlign'=>'right',
+                'format'=>['decimal', 2],
+                'pageSummary'=>true,
+            ],
         ]
     ]); ?>
 </div>
