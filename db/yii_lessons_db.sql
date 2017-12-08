@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Dec 08, 2017 at 04:47 PM
+-- Generation Time: Dec 08, 2017 at 04:58 PM
 -- Server version: 5.6.35
 -- PHP Version: 7.1.1
 
@@ -19,6 +19,31 @@ SET time_zone = "+00:00";
 --
 -- Database: `yii_lessons_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `analytical`
+--
+
+CREATE TABLE `analytical` (
+  `analys_id` int(11) NOT NULL,
+  `gen_id` int(11) DEFAULT NULL,
+  `ass_id` int(11) DEFAULT NULL,
+  `analys_desc` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `assistant`
+--
+
+CREATE TABLE `assistant` (
+  `ass_id` int(11) NOT NULL,
+  `gen_id` int(11) DEFAULT NULL,
+  `ass_desc` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -140,8 +165,20 @@ CREATE TABLE `comments` (
 --
 
 INSERT INTO `comments` (`id`, `body`, `thread_id`, `user_id`) VALUES
-(34, 'This is a comment', 1, 2),
-(35, 'This comment is from the author ', 1, 3);
+(34, '1000', 1, 2),
+(35, '2000', 1, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `general`
+--
+
+CREATE TABLE `general` (
+  `gen_id` int(11) NOT NULL,
+  `acc_desc` varchar(255) DEFAULT NULL,
+  `acc_type` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -182,7 +219,8 @@ INSERT INTO `migration` (`version`, `apply_time`) VALUES
 ('m171202_103531_create_thread_images_table', 1512211104),
 ('m171203_041211_create_comments_table', 1512274458),
 ('m171206_051404_role_based_access_control', 1512543493),
-('m171207_180748_create_reply_table', 1512670312);
+('m171207_180748_create_reply_table', 1512670312),
+('m171208_090050_accIndex_1', 1512748260);
 
 -- --------------------------------------------------------
 
@@ -229,11 +267,10 @@ CREATE TABLE `reply` (
 --
 
 INSERT INTO `reply` (`id`, `comment_id`, `thread_id`, `reply`) VALUES
-(1, 34, 1, 'First reply '),
-(2, 34, 1, 'second reply'),
-(3, 35, 1, 'Third reply for comment id 35 and thread id 1 '),
-(4, 35, 1, 'Another reply'),
-(5, NULL, 1, '');
+(1, 34, 1, '10'),
+(2, 34, 1, '20'),
+(3, 35, 1, '30'),
+(4, 35, 1, '40');
 
 -- --------------------------------------------------------
 
@@ -357,6 +394,18 @@ INSERT INTO `user` (`id`, `username`, `email`, `password_hash`, `auth_key`, `con
 --
 
 --
+-- Indexes for table `analytical`
+--
+ALTER TABLE `analytical`
+  ADD PRIMARY KEY (`analys_id`);
+
+--
+-- Indexes for table `assistant`
+--
+ALTER TABLE `assistant`
+  ADD PRIMARY KEY (`ass_id`);
+
+--
 -- Indexes for table `auth_assignment`
 --
 ALTER TABLE `auth_assignment`
@@ -390,6 +439,12 @@ ALTER TABLE `auth_rule`
 ALTER TABLE `comments`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx-thread_comments_id` (`thread_id`);
+
+--
+-- Indexes for table `general`
+--
+ALTER TABLE `general`
+  ADD PRIMARY KEY (`gen_id`);
 
 --
 -- Indexes for table `migration`
@@ -453,10 +508,25 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT for table `analytical`
+--
+ALTER TABLE `analytical`
+  MODIFY `analys_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `assistant`
+--
+ALTER TABLE `assistant`
+  MODIFY `ass_id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+--
+-- AUTO_INCREMENT for table `general`
+--
+ALTER TABLE `general`
+  MODIFY `gen_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `reply`
 --
