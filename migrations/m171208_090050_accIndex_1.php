@@ -9,21 +9,21 @@ class m171208_090050_accIndex_1 extends Migration
        
         $this->createTable('general', [
             'gen_id' => $this->primaryKey(),
-            'acc_desc' => $this->varchar(40),
+            'acc_desc' => $this->string(),
             'acc_type' => $this->integer(1)
         ]);
         
         $this->createTable('assistant', [
             'ass_id' => $this->primaryKey(),
             'gen_id' => $this->integer(),
-            'ass_desc' => $this->varchar(40),
+            'ass_desc' => $this->string(),
         ]); 
         
         $this->createTable('analytical', [
             'analys_id' => $this->primaryKey(),
             'gen_id' => $this->integer(),
             'ass_id' => $this->integer(),
-            'analys_desc' => $this->varchar(40),
+            'analys_desc' => $this->string(),
         ]);
 
     }
