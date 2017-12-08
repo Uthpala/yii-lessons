@@ -8,6 +8,7 @@ use app\models\ReplySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Threads;
 
 /**
  * ReplyController implements the CRUD actions for Reply model.
@@ -64,12 +65,13 @@ class ReplyController extends Controller
     public function actionCreate()
     {
         $model = new Reply();
-
+        $threads = Threads::find()->all();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'threads' => $threads
             ]);
         }
     }

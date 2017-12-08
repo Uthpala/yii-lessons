@@ -8,6 +8,7 @@ use app\models\CommentsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Json;
 
 /**
  * CommentsController implements the CRUD actions for Comments model.
@@ -42,6 +43,22 @@ class CommentsController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionThread(){
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $parents = $_POST['depdrop_parents'];
+            if ($parents != null) {
+                $threadId = $parents[0];
+                $comments = Comments::find()->where(['thread_id'=>$threadId])->all(); 
+                foreach( $comments as $comment ){
+                    $out[] = ['id'=> $comment->id, 'name' => $comment->body];
+                } 
+                return Json::encode(['output'=>$out, 'selected'=>'']);
+            }
+        }
+        echo Json::encode(['output'=>'', 'selected'=>'']);
     }
 
     /**
