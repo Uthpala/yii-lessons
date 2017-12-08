@@ -9,7 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Threads;
-
+use yii\helpers\Json;
 /**
  * ReplyController implements the CRUD actions for Reply model.
  */
@@ -43,6 +43,23 @@ class ReplyController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionReplies(){
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $ids = $_POST['depdrop_parents'];
+            $threadId = empty($ids[0]) ? null : $ids[0];
+            $commentId = empty($ids[1]) ? null : $ids[1];
+            if ($threadId != null) {
+               $replies = Reply::find()->where(['thread_id' => $threadId, 'comment_id' => $commentId ])->all();
+               foreach( $replies as $reply ){
+                   $out[] = ['id'=> $reply->id, 'name' => $reply->reply];
+               }
+               return Json::encode(['output'=> $out, 'selected'=>'']);
+            }
+        }
+        echo Json::encode(['output'=>'', 'selected'=>'']); 
     }
 
     /**

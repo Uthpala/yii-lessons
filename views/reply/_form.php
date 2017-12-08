@@ -21,7 +21,14 @@ use kartik\depdrop\Depdrop;
             ]
         ]); ?>
 
-    <?= $form->field($model, 'reply')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'reply')->widget(DepDrop::classname(), [
+                'pluginOptions'=>[
+                    'depends'=>['thread-id', 'comment-id'],
+                    'placeholder'=>'Select...',
+                    'url'=>Url::to(['/reply/replies'])
+                ]
+            ]);
+        ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

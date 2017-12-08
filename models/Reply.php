@@ -45,8 +45,8 @@ class Reply extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'comment_id' => 'Comment ID',
-            'thread_id' => 'Thread ID',
+            'comment_id' => 'Comments',
+            'thread_id' => 'Threads',
             'reply' => 'Reply',
         ];
     }
