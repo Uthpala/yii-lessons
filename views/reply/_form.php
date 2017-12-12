@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\depdrop\Depdrop;
 ?>
-
+<?php  ?>
 <div class="reply-form">
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->field($model, 'thread_id')->dropDownList(
@@ -19,6 +19,7 @@ use kartik\depdrop\Depdrop;
     <?= $form->field($model, 'comment_id')->widget(DepDrop::classname(), [
             'options'=>['id'=>'comment-id'],
             'pluginOptions'=>[
+                'initialize' => true,
                 'depends'=>['thread-id'],
                 'placeholder'=>'Select Comment',
                 'url'=>Url::to(['/comments/thread'])

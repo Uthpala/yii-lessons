@@ -21,6 +21,16 @@ AppAsset::register($this);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
+    <style>
+    
+        <?php 
+            if( Yii::$app->language == 'ar-AR'){
+                echo 'h2 {
+                    color: red !important;
+                }';
+            }
+        ?>
+    </style>
     <?php $this->head() ?>
 </head>
 <body>
@@ -68,6 +78,18 @@ AppAsset::register($this);
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
 </footer>
+<?php
+yii\bootstrap\Modal::begin([
+    'headerOptions' => ['id' => 'modalHeader'],
+    'id' => 'modal',
+    'size' => 'modal-lg',
+    //keeps from closing modal with esc key or by clicking out of the modal.
+    // user must click cancel or X to close
+    'clientOptions' => ['backdrop' => 'static', 'keyboard' => FALSE]
+]);
+echo "<div id='modalContent'></div>";
+yii\bootstrap\Modal::end();
+?>
 
 <?php $this->endBody() ?>
 </body>

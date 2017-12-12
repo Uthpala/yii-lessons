@@ -54,4 +54,10 @@ class Comments extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Threads::className(), ['id' => 'thread_id']);
     }
+
+    public function getReplies()
+    {
+        return $this->hasMany(Reply::className(), ['comment_id' => 'id']);
+    }
+
 }

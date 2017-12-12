@@ -18,8 +18,8 @@ class ReplySearch extends Reply
     public function rules()
     {
         return [
-            [['id', 'comment_id', 'thread_id'], 'integer'],
-            [['reply'], 'safe'],
+            [['id', 'comment_id', 'thread_id' ], 'integer'],
+            [['reply', 'created_at'], 'safe'],
         ];
     }
 
@@ -43,6 +43,10 @@ class ReplySearch extends Reply
     {
         $query = Reply::find();
 
+        if( $params['r'] == 'reply/chart'){
+            $query->groupBy('comment_id');
+        }
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -50,10 +54,9 @@ class ReplySearch extends Reply
         ]);
 
         $this->load($params);
-
+        
+        $createdAt = explode( ' - ',$this->created_at);
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
@@ -65,7 +68,11 @@ class ReplySearch extends Reply
         ]);
 
         $query->andFilterWhere(['like', 'reply', $this->reply]);
-
+        if( count( $createdAt ) > 1){
+            $this->createdAt = $createdAt[0] .' to '.$createdAt[1];
+            $query->andFilterWhere(['>=', 'created_at', $createdAt[0]]);
+            $query->andFilterWhere(['<=', 'created_at', $createdAt[1]]);
+        }
         return $dataProvider;
     }
 }

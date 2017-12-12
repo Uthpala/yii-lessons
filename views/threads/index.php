@@ -35,16 +35,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'group'=>true,  // enable grouping
             ],
-            [
-                'class' => '\kartik\grid\DataColumn', 
-                'attribute'=>'comment_id', 
-                'width'=>'250px',
-                'value'=>function ($model, $key, $index, $widget) { 
-                    return $model->comments->id;
-                },
-                'group'=>true,  // enable grouping
-                'subGroupOf'=>1 // supplier column index is the parent group
-            ],
             'user_id'
         ]
     ]); ?>

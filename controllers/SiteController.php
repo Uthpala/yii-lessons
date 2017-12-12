@@ -11,6 +11,7 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Person;
 
+
 class SiteController extends Controller
 {
     /**
@@ -62,6 +63,10 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        return $this->render('index');
+    }
+
+    public function actionLanguage(){
         return $this->render('index');
     }
 
@@ -146,4 +151,10 @@ class SiteController extends Controller
             'myWaterBottle' => 'my water bottle'
         ]);
     }
+
+    
+
+
+
+
 }

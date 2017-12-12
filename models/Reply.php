@@ -11,6 +11,7 @@ use Yii;
  * @property integer $comment_id
  * @property integer $thread_id
  * @property string $reply
+ * @property string $created_at
  *
  * @property Comments $comment
  * @property Threads $thread
@@ -32,6 +33,7 @@ class Reply extends \yii\db\ActiveRecord
     {
         return [
             [['comment_id', 'thread_id'], 'integer'],
+            [['created_at'], 'safe'],
             [['reply'], 'string', 'max' => 255],
             [['comment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Comments::className(), 'targetAttribute' => ['comment_id' => 'id']],
             [['thread_id'], 'exist', 'skipOnError' => true, 'targetClass' => Threads::className(), 'targetAttribute' => ['thread_id' => 'id']],
@@ -45,9 +47,10 @@ class Reply extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'comment_id' => 'Comments',
-            'thread_id' => 'Threads',
+            'comment_id' => 'Comment ID',
+            'thread_id' => 'Thread ID',
             'reply' => 'Reply',
+            'created_at' => 'Created At',
         ];
     }
 

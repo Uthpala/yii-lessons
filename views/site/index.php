@@ -4,8 +4,9 @@ $this->title = 'Forum';
 <div class="site-index">
 
     <div class="jumbotron">
+    <?= \Yii::t('app', 'welcome'); ?>
     </div>
-
+    <?= \Yii::t('app', 'good bye'); ?>
     <div class="body-content">
 
         <div class="row">

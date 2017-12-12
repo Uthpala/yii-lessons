@@ -97,6 +97,7 @@ class ThreadsController extends Controller
                 ]);
             }
         }else{
+            Yii::warning('tried to access thread create');
             die('you cant do this');
         }
 

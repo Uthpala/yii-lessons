@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
+use yii\helpers\ArrayHelper;
 
 /**
  * CommentsController implements the CRUD actions for Comments model.
@@ -38,10 +39,27 @@ class CommentsController extends Controller
     {
         $searchModel = new CommentsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        print_r($dataProvider->getModels());
+        die();
         return $this->render('index', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'dataProvider' => $dataProvider
+        ]);
+    }
+
+    public function actionChart(){
+        $searchModel = new CommentsSearch();
+        $comments = Comments::find()->all(); 
+        $labels = [];
+        $data = [];
+        foreach( $comments as $comment ){
+            $labels[] = $comment->body;
+            $data[] = $comment->getReplies()->count();
+        }
+        return $this->render('chart', [
+            'searchModel' => $searchModel,
+            'labels' => $labels,
+            'data' => $data,
         ]);
     }
 
@@ -139,6 +157,14 @@ class CommentsController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionSomeAction($id) {
+        $model = $this->findModel($id);
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('_form', [
+                        'model' => $model
+            ]);
+        } 
+    }
     /**
      * Finds the Comments model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

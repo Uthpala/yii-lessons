@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Threads;
 use yii\helpers\Json;
+use yii\httpclient\Client;
 /**
  * ReplyController implements the CRUD actions for Reply model.
  */
@@ -38,7 +39,7 @@ class ReplyController extends Controller
     {
         $searchModel = new ReplySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -61,6 +62,43 @@ class ReplyController extends Controller
         }
         echo Json::encode(['output'=>'', 'selected'=>'']); 
     }
+
+    public function actionCountry(){
+        $client = new Client();
+        $response = $client->createRequest()
+            ->setMethod('get')
+            ->setUrl('https://restcountries.eu/rest/v2/all')
+            ->send();
+        if ($response->isOk) {
+            foreach($response->data as $data){
+                echo $data['name'];
+                echo '<br/>';
+            }
+            die();
+        }
+    }
+
+    public function actionChart(){
+        $searchModel = new ReplySearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $models = $dataProvider->getModels();
+        $labels = [];
+        $data = [];
+        foreach( $models as $model ){
+            $labels[] = $model->comment->body;
+            $data[] = $model->comment->getReplies()->count();
+        }
+
+        return $this->render('chart', 
+            [
+                'labels' => $labels,
+                'data' => $data,
+                'searchModel' => $searchModel 
+            ]
+        );
+
+    }
+
 
     /**
      * Displays a single Reply model.

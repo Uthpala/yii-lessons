@@ -33,8 +33,8 @@ class Threads extends \yii\db\ActiveRecord
         return [
             [['title','body'],'required'],
             [['body'], 'string'],
-            [['threadImages'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg', 'maxFiles' => 4],
-            [['title'], 'string', 'max' => 255],
+            [['threadImages'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'maxFiles' => 4],
+            [['title','user_id'], 'string', 'max' => 255],
         ];
     }
 
@@ -55,7 +55,7 @@ class Threads extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'title' => 'Title',
+            'title' => Yii::t('app','Title'),
             'body' => 'Body',
         ];
     }
@@ -84,4 +84,9 @@ class Threads extends \yii\db\ActiveRecord
         }
         return false;
     }
+
+    public static function getFirstThread($id){
+        return  Threads::findOne($id);
+    }
+
 }

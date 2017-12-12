@@ -2,41 +2,28 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
-
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\CommentsSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
-$this->title = 'Comments';
+$this->title = 'Auth Item Children';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="comments-index">
-
+<div class="auth-item-child-index">
     <h1><?= Html::encode($this->title) ?></h1>
+    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
+    <p>
+        <?= Html::a('Create Auth Item Child', ['create'], ['class' => 'btn btn-success']) ?>
+    </p>
+    <?php 
+        $columns = [
+            ['class' => 'yii\grid\SerialColumn'],
+            'id',
+            'body',
+            ['class' => 'yii\grid\ActionColumn'],
+        ];
+    ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'columns' => [
-            ['class'=>'kartik\grid\SerialColumn'],
-            [
-                'attribute'=>'thread_id', 
-                'width'=>'310px',
-                'value'=>function ($model, $key, $index, $widget) { 
-                    return $model->thread->title;
-                },
-                'filterWidgetOptions'=>[
-                    'pluginOptions'=>['allowClear'=>true],
-                ],
-                'group'=>true,  
-            ],
-            [
-                'attribute'=>'body', 
-                'width'=>'250px',
-                'value'=>function ($model, $key, $index, $widget) { 
-                    return $model->body;
-                },
-            ]
-        ]
+        'hover'=>true,
+        'columns' => $columns,
     ]); ?>
 </div>
